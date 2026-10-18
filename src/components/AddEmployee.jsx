@@ -18,7 +18,6 @@ function AddEmployee({
       <input
         type="number"
         min="0"
-        step="any"
         placeholder="З/П в $"
         value={salary}
         onChange={e => setSalary(e.target.value)}
