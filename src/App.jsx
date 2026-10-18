@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 
+import Header from './components/Header'
+import Controls from './components/Controls'
+import EmployeeList from './components/EmployeeList'
+import AddEmployee from './components/AddEmployee'
+
 function App() {
   const [employees, setEmployees] = useState(() =>
     JSON.parse(localStorage.getItem('employees') || '[]')
   )
+
   const [name, setName] = useState('')
   const [salary, setSalary] = useState('')
   const [search, setSearch] = useState('')
@@ -17,7 +23,7 @@ function App() {
   const addEmployee = (e) => {
     e.preventDefault()
 
-    if (!name.trim() || !salary || salary < 0) return
+    if (!name.trim() || salary === '' || Number(salary) < 0) return
 
     setEmployees([
       ...employees,
@@ -74,99 +80,32 @@ function App() {
 
   return (
     <div className="app">
+      <Header
+        employeeCount={employees.length}
+        bonusCount={bonusCount}
+      />
 
-      <header>
-        <h1>Учет сотрудников компании №</h1>
-        <p>Общее число сотрудников: {employees.length}</p>
-        <p>Премию получат: {bonusCount}</p>
-      </header>
+      <Controls
+        search={search}
+        setSearch={setSearch}
+        filter={filter}
+        setFilter={setFilter}
+      />
 
-      <section className="controls">
-        <input
-          placeholder="Найти сотрудника"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
+      <EmployeeList
+        employees={filtered}
+        onRemove={removeEmployee}
+        onTogglePromotion={togglePromotion}
+        onToggleBonus={toggleBonus}
+      />
 
-        <div className="filters">
-          <button
-            className={filter === 'all' ? 'active' : ''}
-            onClick={() => setFilter('all')}
-          >
-            Все сотрудники
-          </button>
-
-          <button
-            className={filter === 'promotion' ? 'active' : ''}
-            onClick={() => setFilter('promotion')}
-          >
-            На повышение
-          </button>
-
-          <button
-            className={filter === 'salary' ? 'active' : ''}
-            onClick={() => setFilter('salary')}
-          >
-            З/П больше 1000$
-          </button>
-        </div>
-      </section>
-
-      <section className="list">
-        {filtered.map(emp => (
-          <div className="employee" key={emp.id}>
-
-            <span
-              className={emp.promotion ? 'name promotion' : 'name'}
-              onClick={() => togglePromotion(emp.id)}
-            >
-              {emp.name}
-            </span>
-
-            <span>{emp.salary}$</span>
-
-            <div className="actions">
-              <button
-                className={emp.bonus ? 'cookie active' : 'cookie'}
-                onClick={() => toggleBonus(emp.id)}
-              >
-                🍪
-              </button>
-
-              <button onClick={() => removeEmployee(emp.id)}>
-                🗑️
-              </button>
-            </div>
-
-          </div>
-        ))}
-
-        {!filtered.length && (
-          <div className="empty">
-            Сотрудники не найдены
-          </div>
-        )}
-      </section>
-
-      <form className="add" onSubmit={addEmployee}>
-        <h2>Добавьте нового сотрудника</h2>
-
-        <input
-          placeholder="Как его зовут?"
-          value={name}
-          onChange={e => setName(e.target.value)}
-        />
-
-        <input
-          type="number"
-          placeholder="З/П в $"
-          value={salary}
-          onChange={e => setSalary(e.target.value)}
-        />
-
-        <button>Добавить</button>
-      </form>
-
+      <AddEmployee
+        name={name}
+        setName={setName}
+        salary={salary}
+        setSalary={setSalary}
+        onAdd={addEmployee}
+      />
     </div>
   )
 }
