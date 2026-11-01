@@ -11,8 +11,7 @@ function App() {
     JSON.parse(localStorage.getItem('employees') || '[]')
   )
 
-  const [name, setName] = useState('')
-  const [salary, setSalary] = useState('')
+
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('all')
 
@@ -20,25 +19,38 @@ function App() {
     localStorage.setItem('employees', JSON.stringify(employees))
   }, [employees])
 
-  const addEmployee = (e) => {
-    e.preventDefault()
+const addEmployee = (e) => {
+  e.preventDefault()
 
-    if (!name.trim() || salary === '' || Number(salary) < 0) return
+  const form = e.currentTarget
+  const formData = new FormData(form)
 
-    setEmployees([
-      ...employees,
-      {
-        id: Date.now(),
-        name: name.trim(),
-        salary: Number(salary),
-        bonus: false,
-        promotion: false
-      }
-    ])
+  const name = String(formData.get('name') || '').trim()
+  const salaryValue = String(formData.get('salary') || '')
+  const salary = Number(salaryValue)
 
-    setName('')
-    setSalary('')
+  if (
+    !name ||
+    salaryValue === '' ||
+    !Number.isFinite(salary) ||
+    salary < 0
+  ) {
+    return
   }
+
+  setEmployees(prevEmployees => [
+    ...prevEmployees,
+    {
+      id: Date.now(),
+      name,
+      salary,
+      bonus: false,
+      promotion: false
+    }
+  ])
+
+  form.reset()
+}
 
   const removeEmployee = (id) => {
     setEmployees(employees.filter(emp => emp.id !== id))
@@ -99,13 +111,7 @@ function App() {
         onToggleBonus={toggleBonus}
       />
 
-      <AddEmployee
-        name={name}
-        setName={setName}
-        salary={salary}
-        setSalary={setSalary}
-        onAdd={addEmployee}
-      />
+      <AddEmployee onAdd={addEmployee} />
     </div>
   )
 }

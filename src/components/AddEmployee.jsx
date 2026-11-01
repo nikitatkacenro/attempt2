@@ -1,26 +1,20 @@
-function AddEmployee({
-  name,
-  setName,
-  salary,
-  setSalary,
-  onAdd
-}) {
+function AddEmployee({ onAdd }) {
   return (
     <form className="add" onSubmit={onAdd}>
       <h2>Добавьте нового сотрудника</h2>
 
       <input
+        name="name"
         placeholder="Как его зовут?"
-        value={name}
-        onChange={e => setName(e.target.value)}
+        required
       />
 
       <input
+        name="salary"
         type="number"
         min="0"
         placeholder="З/П в $"
-        value={salary}
-        onChange={e => setSalary(e.target.value)}
+        required
       />
 
       <button type="submit">Добавить</button>
