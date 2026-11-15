@@ -135,91 +135,125 @@ button {
   border-color: white;
 }
 
-@media (max-width: 700px) {
+
+/* Адаптация для телефонов */
+@media screen and (max-width: 700px) {
+
   .app {
-    margin: 10px;
+    width: 100%;
+    margin: 10px 0;
+    padding: 0 12px;
   }
 
-  .employee {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .filters {
-    flex-wrap: wrap;
+  header,
+  .controls,
+  .add {
+    width: 100%;
+    padding: 20px 16px;
+    margin-bottom: 25px;
+    border-radius: 5px;
   }
 
   h1 {
     font-size: 28px;
+    line-height: 1.2;
   }
-}.name {
-  cursor: pointer;
+
+  h2 {
+    font-size: 25px;
+  }
+
+  header p {
+    font-size: 18px;
+  }
+
+  .controls input {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .filters button {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  /* Список сотрудников */
+  .employee {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 18px 14px;
+    font-size: 19px;
+  }
+
+  .employee .actions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+
+  .employee button {
+    margin: 0;
+    font-size: 17px;
+  }
+
+  /* Форма добавления */
+  .add {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .add h2 {
+    width: 100%;
+    font-size: 26px;
+    line-height: 1.3;
+  }
+
+  .add input {
+    width: 100%;
+    min-width: 0;
+    flex: none;
+    font-size: 16px;
+  }
+
+  .add button {
+    align-self: flex-start;
+  }
+
+  .list {
+    width: 100%;
+    margin-bottom: 25px;
+  }
+
+  .empty {
+    padding: 25px 10px;
+  }
 }
 
-.name:hover {
-  color: #d9a441;
-}
+/* Очень маленькие экраны */
+@media screen and (max-width: 380px) {
 
-.name.promotion {
-  color: #d9a441;
-}
+  h1 {
+    font-size: 24px;
+  }
 
-.cookie.active {
-  background: #f5e2b5;
-}
+  .employee {
+    font-size: 17px;
+    padding: 15px 10px;
+  }
 
-.employee {
-  display: grid;
-  grid-template-columns: 1fr 180px 120px;
-  align-items: center;
-  padding: 22px 25px;
-  border: 1px solid #ddd;
-  border-bottom: 0;
-  font-size: 23px;
-}
+  .filters button {
+    font-size: 13px;
+  }
 
-.employee:last-child {
-  border-bottom: 1px solid #ddd;
-}
-
-.actions {
-  display: flex;
-  gap: 8px;
-}
-
-.actions button {
-  padding: 8px 11px;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-}
-
-.empty {
-  text-align: center;
-  padding: 40px;
-  color: #777;
-}
-
-
-@media screen and (max-width: 600px) {
-    body {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
-
-    .container {
-        width: 100%;
-        padding: 15px;
-        box-sizing: border-box;
-    }
-
-    input {
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    button {
-        max-width: 100%;
-    }
+  .add h2 {
+    font-size: 23px;
+  }
 }
