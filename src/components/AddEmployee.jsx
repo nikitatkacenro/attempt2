@@ -1,4 +1,6 @@
 import * as yup from 'yup'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
 
 const validationSchema = yup.object({
   name: yup
@@ -16,48 +18,54 @@ const validationSchema = yup.object({
 })
 
 function AddEmployee({ onAdd }) {
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    const form = e.currentTarget
-
-    const values = {
-      name: form.elements.name.value,
-      salary: form.elements.salary.value
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      name: '',
+      salary: ''
     }
+  })
 
-    try {
-      const validatedData = await validationSchema.validate(values)
+  const onSubmit = (data) => {
+    onAdd({
+      name: data.name,
+      salary: data.salary
+    })
 
-      onAdd({
-        name: validatedData.name,
-        salary: validatedData.salary
-      })
-
-      form.reset()
-    } catch (error) {
-      alert(error.message)
-    }
+    reset()
   }
 
   return (
-    <form className="add" onSubmit={handleSubmit}>
+    <form className="add" onSubmit={handleSubmit(onSubmit)}>
       <h2>Добавьте нового сотрудника</h2>
 
       <input
-        name="name"
+        {...register('name')}
         placeholder="Как его зовут?"
         minLength={2}
         maxLength={30}
       />
 
+      {errors.name && (
+        <p className="error">{errors.name.message}</p>
+      )}
+
       <input
-        name="salary"
+        {...register('salary')}
         type="number"
         min="0.01"
         step="0.01"
         placeholder="З/П в $"
       />
+
+      {errors.salary && (
+        <p className="error">{errors.salary.message}</p>
+      )}
 
       <button type="submit">Добавить</button>
     </form>
