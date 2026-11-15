@@ -47,7 +47,7 @@ function App() {
     )
   }
 
-  // Переключение премии
+
   const toggleBonus = (id) => {
     setEmployees(prevEmployees =>
       prevEmployees.map(emp =>
