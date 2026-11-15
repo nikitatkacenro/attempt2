@@ -11,7 +11,6 @@ function App() {
     JSON.parse(localStorage.getItem('employees') || '[]')
   )
 
-
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('all')
 
@@ -19,57 +18,44 @@ function App() {
     localStorage.setItem('employees', JSON.stringify(employees))
   }, [employees])
 
-const addEmployee = (e) => {
-  e.preventDefault()
-
-  const form = e.currentTarget
-  const formData = new FormData(form)
-
-  const name = String(formData.get('name') || '').trim()
-  const salaryValue = String(formData.get('salary') || '')
-  const salary = Number(salaryValue)
-
-  if (
-    !name ||
-    salaryValue === '' ||
-    !Number.isFinite(salary) ||
-    salary < 0
-  ) {
-    return
+  const addEmployee = (employee) => {
+    setEmployees(prevEmployees => [
+      ...prevEmployees,
+      {
+        id: Date.now(),
+        name: employee.name,
+        salary: employee.salary,
+        bonus: false,
+        promotion: false
+      }
+    ])
   }
 
-  setEmployees(prevEmployees => [
-    ...prevEmployees,
-    {
-      id: Date.now(),
-      name,
-      salary,
-      bonus: false,
-      promotion: false
-    }
-  ])
-
-  form.reset()
-}
-
   const removeEmployee = (id) => {
-    setEmployees(employees.filter(emp => emp.id !== id))
+    setEmployees(prevEmployees =>
+      prevEmployees.filter(emp => emp.id !== id)
+    )
   }
 
   const togglePromotion = (id) => {
-    setEmployees(employees.map(emp =>
-      emp.id === id
-        ? { ...emp, promotion: !emp.promotion }
-        : emp
-    ))
+    setEmployees(prevEmployees =>
+      prevEmployees.map(emp =>
+        emp.id === id
+          ? { ...emp, promotion: !emp.promotion }
+          : emp
+      )
+    )
   }
 
+  // Переключение премии
   const toggleBonus = (id) => {
-    setEmployees(employees.map(emp =>
-      emp.id === id
-        ? { ...emp, bonus: !emp.bonus }
-        : emp
-    ))
+    setEmployees(prevEmployees =>
+      prevEmployees.map(emp =>
+        emp.id === id
+          ? { ...emp, bonus: !emp.bonus }
+          : emp
+      )
+    )
   }
 
   const filtered = employees.filter(emp => {

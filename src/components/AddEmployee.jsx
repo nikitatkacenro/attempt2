@@ -1,22 +1,43 @@
+import * as yup from 'yup'
+
+const validationSchema = yup.object({
+  name: yup
+    .string()
+    .trim()
+    .required('Введите имя сотрудника')
+    .min(2, 'Имя должно содержать минимум 2 символа')
+    .max(30, 'Имя не должно превышать 30 символов'),
+
+  salary: yup
+    .number()
+    .typeError('Введите корректную зарплату')
+    .positive('Зарплата должна быть больше 0')
+    .required('Введите зарплату')
+})
+
 function AddEmployee({ onAdd }) {
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const form = e.target
-    const name = form.name.value.trim()
-    const salary = Number(form.salary.value)
+    const form = e.currentTarget
 
-    if (!name) {
-      alert('Введите имя сотрудника')
-      return
+    const values = {
+      name: form.elements.name.value,
+      salary: form.elements.salary.value
     }
 
-    if (!form.salary.value || !Number.isFinite(salary) || salary <= 0) {
-      alert('Введите корректную зарплату (больше 0)')
-      return
-    }
+    try {
+      const validatedData = await validationSchema.validate(values)
 
-    onAdd(e)
+      onAdd({
+        name: validatedData.name,
+        salary: validatedData.salary
+      })
+
+      form.reset()
+    } catch (error) {
+      alert(error.message)
+    }
   }
 
   return (
@@ -26,7 +47,6 @@ function AddEmployee({ onAdd }) {
       <input
         name="name"
         placeholder="Как его зовут?"
-        required
         minLength={2}
         maxLength={30}
       />
@@ -37,7 +57,6 @@ function AddEmployee({ onAdd }) {
         min="0.01"
         step="0.01"
         placeholder="З/П в $"
-        required
       />
 
       <button type="submit">Добавить</button>
